@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="alternate" hreflang="ru" href="index.html">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leonid Nekrylov</title>
+<meta name="description" content="Leonid Nekrylov, Robot Learning Engineer. Extended resume: education, experience and projects, skills.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="#top">Leonid Nekrylov</a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#skills">Skills</a>
+      <a href="#education">Education</a>
+      <a href="#experience">Experience and projects</a>
+    </nav>
+    <a class="iconbtn" href="index.html" hreflang="ru">RU</a>
+    <button class="iconbtn" id="theme" aria-label="Toggle theme" title="Theme">◐</button>
+  </div>
+</header>
+
+<main id="top" class="wrap">
+
+<div class="cv-head">
+  <div>
+    <h1>Leonid Nekrylov</h1>
+    <p class="lead" style="margin:10px 0 20px;font-size:21px;color:var(--ink)">Robot Learning Engineer</p>
+    <p class="contacts">
+      <span>Moscow</span>
+      <a href="tel:+79637140011">+7 (963) 714-00-11</a>
+      <a href="mailto:nekrylov.ln@phystech.edu">nekrylov.ln@phystech.edu</a>
+      <a href="https://t.me/leonid_n_n">t.me/leonid_n_n</a>
+      <a href="https://github.com/leonidnn">github.com/leonidnn</a>
+    </p>
+  </div>
+  <div class="photo"><img src="media/photo.jpg" alt="Leonid Nekrylov" onerror="this.parentNode.remove()"></div>
+</div>
+
+<!-- ============ SKILLS ============ -->
+<section class="chapter" id="skills">
+  <div class="sec-title"><h2>Technical skills</h2></div>
+  <ul class="bullets">
+    <li>Python, PyTorch, PostgreSQL, Git, Pytest, Linux, LaTeX, Docker, NVIDIA Isaac Sim / Isaac Lab, MuJoCo.</li>
+    <li>English C1, TOEFL iBT 107. Russian native.</li>
+  </ul>
+</section>
+
+<!-- ============ EDUCATION ============ -->
+<section class="chapter" id="education">
+  <div class="sec-title"><h2>Education</h2></div>
+
+  <div class="entry-head edu-head">
+    <div class="l1"><h3>Moscow Institute of Physics and Technology (MIPT)</h3><span class="date">2023 – 2027</span></div>
+    <div class="l2"><span>BSc</span><span>Dolgoprudny, Russia</span></div>
+  </div>
+  <p>Phystech School of Applied Mathematics and Computer Science, Center for Cognitive Modeling.</p>
+
+  <h4 style="margin-top:24px">Relevant courses</h4>
+  <ul class="courses">
+    <li><b>Optimization and ML.</b> Year-long course on optimization methods in ML (D. Merkulov), Machine Learning 1 (R. Neychev), LLMs (Giraffe AI).</li>
+    <li><b>Reinforcement Learning.</b> Self-studied UC Berkeley CS285, Deep Reinforcement Learning (Sergey Levine).</li>
+    <li><b>Mathematics.</b> Probability theory, stochastic processes, statistics, linear algebra, calculus and functional analysis.</li>
+    <li><b>Computer Science.</b> Algorithms and data structures, C++, databases (PostgreSQL), Python.</li>
+    <li><b>Physics and engineering.</b> Introduction to robotics, theoretical mechanics.</li>
+  </ul>
+</section>
+
+<!-- ============ EXPERIENCE AND PROJECTS ============ -->
+<section class="chapter" id="experience">
+  <div class="sec-title"><h2>Experience and projects</h2></div>
+
+  <!-- PET OR THREAT -->
+  <article class="entry" id="pet">
+    <div class="entry-head">
+      <div class="l1"><h3>Pet or Threat, behaviour of a Unitree Go1 robot dog</h3><span class="date">October 2026</span></div>
+      <div class="l2"><span>Personal project, MuJoCo</span><span>Moscow, Russia</span></div>
+    </div>
+    <div class="projlink"><a class="go" href="https://leonidnn.github.io/pet-or-threat-site/">▶ Watch the video</a><a class="url" href="https://leonidnn.github.io/pet-or-threat-site/">leonidnn.github.io/pet-or-threat-site</a></div>
+    <ul class="bullets">
+      <li>A simulated robot dog that nobody gives commands to. It decides on its own what to do, for example guard, play, cuddle, wait for its owner or sleep.</li>
+      <li>The key architectural idea is that the decision module receives only perception and emits only intents such as go there or look here, while walking is handled by pretrained RL policies. So the module does not depend on the simulator and moves to another robot by replacing the lower level.</li>
+    </ul>
+
+    <figure class="media" style="margin-top:28px">
+      <video src="media/pet/en/hero_loop.mp4" poster="media/pet/en/feint.jpg" muted loop playsinline autoplay preload="metadata" aria-label="Two strangers try a feint on the dog"></video>
+    </figure>
+
+    <h3>What the dog does</h3>
+    <p class="read">Four needs (energy, social, curiosity, territory), three emotions and what the dog sees and hears decide its mode ten times a second. Pick a mode to watch a clip.</p>
+    <div class="tabs" id="modetabs" role="tablist" aria-label="Modes"></div>
+    <div class="mode-view">
+      <video id="modevideo" muted loop playsinline autoplay preload="metadata"></video>
+      <div id="modetext"></div>
+    </div>
+
+    <h3>Architecture</h3>
+    <p class="read">The system is split into three levels, like a living animal: senses, brain and muscles. Each level runs at its own rate and talks to its neighbour only through a short message. Below, in order, is what each level does and why it is built that way.</p>
+
+    <div class="lvls">
+      <div class="lvl">
+        <div class="tag-l"><b>1. Perception</b>500 times a second</div>
+        <div>
+          <h4>What the dog sees, hears and feels</h4>
+          <p>MuJoCo computes the physics, and people in the room walk according to a pre-written script. The dog does not get a ready-made picture of the world. It sees only what falls into its 240° field of view, with noise, and does not see anything hidden behind a wall or another person. It hears bangs and footsteps within 4 m. It feels touch in five body zones and tells a stroke from a pat or a shove.</p>
+          <p class="why">Touch took some work. People’s hands in simulation are infinitely stiff, and the very first stroke pressed the dog into the floor with 5 kN. I had to make a hand that yields and settles at about 8 N, like a real palm.</p>
+        </div>
+      </div>
+      <div class="pass">The brain receives a <b>perception snapshot</b>: where everyone is as far as the dog knows, what it heard, where it was touched.</div>
+
+      <div class="lvl">
+        <div class="tag-l"><b>2. Decisions</b>10 times a second</div>
+        <div>
+          <h4>What to do right now</h4>
+          <p>The dog has four needs: energy, social contact, curiosity and a sense of territory. They change over time and with events: play makes the dog tired, it misses its owner when alone, a new object makes it curious. On top of the needs there are three emotions: arousal, contentment and fear.</p>
+          <p>For each mode the brain computes a single number, how appropriate that mode is right now. The mode with the highest number wins. To keep the dog from flipping between two modes, the current mode gets a small head start and a minimum time it must stay in. Reflexes, meaning a startle, a shove or a fall, interrupt anything. Inside the chosen mode a step-by-step routine runs: for sleep, walk to the bed, turn round, lie down and curl up.</p>
+          <p class="why">Why not a state machine or a neural network. A state machine with seven modes turns into a web of transitions, and it is hard to express “tired, but someone is at the door”. Reinforcement learning would need a reward for dog-likeness, and there is no such thing. Scoring appropriateness solves both problems and also explains every decision. Here is a real line from the log:</p>
+          <code class="logline">hold the line: sentry 1.07 (threat 1.00, territorial 0.98) &gt; idle 0.12</code>
+          <p class="why">An example of a subtlety. The robot walks half as fast as a person, so the dog starts guarding as soon as a stranger could reach the target within 8 seconds, rather than when the stranger comes within some distance. Otherwise it simply does not make it in time.</p>
+        </div>
+      </div>
+      <div class="pass">The body receives an <b>intent</b>: where to go or which pose to take, where to look, whether to bark or growl.</div>
+
+      <div class="lvl">
+        <div class="tag-l"><b>3. Body</b>50 times a second</div>
+        <div>
+          <h4>How to carry it out</h4>
+          <p>Walking and getting up after a fall are driven by pretrained neural RL policies for the Go1 from the open project mjx-go1-getup. Sit, lie down, bow and shake off are predefined poses. Tail, neck and breathing run constantly in the background and show emotions: joy lifts the tail, fear tucks it in.</p>
+          <p class="why">I did not write my own gait, because the project is about behaviour, not walking. I tested the pretrained policies separately: no falls over 15 commands of 30 seconds each, and a successful get-up in 90% of 40 falls. Porting uncovered details that made the robot fall within the first second, for example an extra input normalization that was not used in training. I never blend poses and walking: the policy authors measured that blending raised the fall rate from 8% to 38–74%. A shove is also caught by the walk policy: it steps to recover, while a frozen pose simply falls over.</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="read" style="margin-top:20px"><b>The key point of this design.</b> The brain knows nothing about the simulator. It receives a perception snapshot and gives back an intent. So the same brain runs in a simplified sandbox for tests, and moving it to another robot only requires replacing the first and third levels.</p>
+
+    <h3>Metrics</h3>
+    <p class="read small muted">All scenarios are deterministic. Each runs twice, with emotions and with affect frozen at neutral. A separate test over 20 seeds, 72 minutes of simulation, 0 falls.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Scenario</th><th>What it tests</th><th>With emotions</th><th>Without emotions</th></tr></thead>
+        <tbody>
+          <tr><td><code>guard_point</code></td><td>guarding a point, two attempts</td><td>not reached, closest 1.99 m, on the line 92%</td><td>not reached, 1.97 m, 94%</td></tr>
+          <tr><td><code>two_intruders</code></td><td>a feint from two sides</td><td>not reached, 0.94 m, on the line 74%</td><td>not reached, 0.67 m, 73%</td></tr>
+          <tr><td><code>guard_owner</code></td><td>guarding a moving owner</td><td>not reached, 1.46 m, 94%</td><td>not reached, 1.68 m, 100%</td></tr>
+          <tr><td><code>fetch</code></td><td>fetch, two throws</td><td>2/2 to the feet, 19.1 s</td><td>2/2, 19.8 s</td></tr>
+          <tr><td><code>companion</code></td><td>petting for 20 s, then a pause</td><td>deepest pose, asks for more 2 times</td><td>1 time</td></tr>
+          <tr><td><code>missing_owner</code></td><td>owner away for 45 s</td><td>at the door 78%, 7.5 whines per minute, 4 bounces on greeting</td><td>78%, 5.0 per minute, 2 bounces</td></tr>
+          <tr><td><code>rest</code></td><td>a tired dog, a bang during sleep</td><td>asleep after 22.4 s, startles 1</td><td>22.4 s, startles 0</td></tr>
+          <tr><td><code>reflexes</code></td><td>two bangs, a shove, a knock-down</td><td>startle 0.78 → 0.59, falls 2, get-ups 2</td><td>no startle, 1 and 1</td></tr>
+          <tr class="hl"><td><code>day_in_life</code></td><td>3.5 minutes, no script for modes</td><td>10 mode switches, 7 modes, 0 falls</td><td>same</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="read small muted" style="margin-top:10px">On the line means the share of guarding time the dog stood within 0.6 m of the segment between the intruder and the target.</p>
+
+    <div class="grid2" style="margin-top:28px">
+      <figure class="media"><img class="zoom" src="media/pet/modes.png" alt="One still per mode" loading="lazy"><figcaption>One still per mode.</figcaption></figure>
+      <figure class="media"><img class="zoom" src="media/pet/poses.png" alt="Pose library" loading="lazy"><figcaption>Pose library.</figcaption></figure>
+    </div>
+
+    <h3>Limitations</h3>
+    <ul class="clean read">
+      <li>People are kinematic and touch the dog only with their hands. Whether an intruder gets through is decided by an explicit deterrence model, so guarding metrics measure the dog’s positioning and timing.</li>
+      <li>The Go1 walk policy cannot walk backwards or sideways and tops out at 0.5 m/s. Stepping back is a pose.</li>
+      <li>Perception takes ground-truth positions from the simulator through a sensor model with field of view, occlusion, noise and dropouts, not a learned detector.</li>
+    </ul>
+  </article>
+
+  <!-- GRASP -->
+  <article class="entry" id="grasp">
+    <div class="entry-head">
+      <div class="l1"><h3>MIPT CCM, RL agent for RGB-D object grasping</h3><span class="date">September 2026 – October 2026</span></div>
+      <div class="l2"><span>Research project, Isaac Sim, UR10e</span><span>Moscow, Russia</span></div>
+    </div>
+    <div class="projlink"><a class="go" href="https://github.com/leonidnn/isaac-rgbd-grasping">▶ Watch the video and code</a><a class="url" href="https://github.com/leonidnn/isaac-rgbd-grasping">github.com/leonidnn/isaac-rgbd-grasping</a></div>
+    <ul class="bullets">
+      <li>Built an Isaac Sim environment for grasp training with object randomization. Wrote a custom Vulkan layer that keeps the renderer off other people’s GPUs on the shared server.</li>
+      <li>Trained an RL agent. A network predicts grasp success for every point and angle from a depth map, and the agent takes the best one.</li>
+      <li>Evaluation in new random poses with the full arm approach gave 18/20 and 19/20 on two objects. SAC did not learn at all in 5.7k attempts.</li>
+      <li>Added a new object, a bag of chips, and compared fine-tuning approaches that avoid forgetting the old ones. The best so far is two networks with a switch by object type, giving 88% on the new object versus 42% without fine-tuning while keeping 95% on the old ones.</li>
+      <li>Found a rendering artefact that had distorted training, and fixed the setup.</li>
+    </ul>
+
+    <div class="more-head">More</div>
+
+    <div class="grid2" style="align-items:center">
+      <figure class="media">
+        <img class="zoom" src="media/grasp/arm-can-ok.webp" alt="The agent grasps a can, the arm moves from its home pose and lifts the object" loading="lazy">
+        <figcaption>The trained agent chooses where and at what angle to grasp from a top-down image. The arm moves from its home pose, grasps the can and lifts it.</figcaption>
+      </figure>
+      <div>
+        <p><b>Task.</b> One of three objects lies on the table, a juice carton, a can or a bag of chips. A camera takes a top-down image, the agent decides where and at what angle to grasp, and the arm grasps from above and lifts. Success means lifting by 10 cm and holding for 1 s.</p>
+        <p>Every episode is randomized. The object, its position on the table, rotation from 0 to 360° and pose all change, the carton stands or lies, the chips face up or down.</p>
+        <p class="muted small">Everything happens in simulation. Full arm approach means the arm travels from its home pose using my planner instead of being teleported to the object, as in the fast training environment.</p>
+      </div>
+    </div>
+
+    <h3>How the agent works</h3>
+    <p class="read">A Q-map following Zeng et al. 2018, Visual Pushing-Grasping, with a much simpler network. An episode is a single step, so training reduces to Q-learning with a horizon of one. After each attempt we know whether the grasp succeeded, and the network output at that cell is pulled towards 1 or 0.</p>
+    <div class="flow" aria-label="Agent pipeline">
+      <div class="node"><b>RGB-D camera</b><span>top-down image, depth only</span></div>
+      <div class="arrow">→</div>
+      <div class="node"><b>128×128 height map</b><span>a 70×70 cm patch of the table</span></div>
+      <div class="arrow">→</div>
+      <div class="node"><b>U-Net</b><span>8 maps, one per 22.5° angle</span></div>
+      <div class="arrow">→</div>
+      <div class="node"><b>Best cell on the object</b><span>point and angle with the highest success probability</span></div>
+      <div class="arrow">→</div>
+      <div class="node"><b>Grasp</b><span>height by rule, object top minus 3 cm</span></div>
+    </div>
+    <div class="grid3 small">
+      <div class="card"><h4>Training</h4>BCE on the chosen cell, replay buffer, ε-greedy from 0.5 to 0.1 over 8 hours, Adam 1e-4.</div>
+      <div class="card"><h4>Fast environment</h4>8 tables in one process, the arm teleports 10 cm above the target point. One attempt takes 1–2 s instead of 1–2 minutes.</div>
+      <div class="card"><h4>SAC</h4>The actor outputs x, y and angle directly. Within 5.7k attempts it collapsed to “always the table centre”.</div>
+    </div>
+
+    <figure class="media narrow" style="margin-top:28px">
+      <img class="zoom light" src="media/grasp/6_rl_2_depth_train_qmap_d_viz_qmap_028488.png" alt="Frame with the chosen grasp, height map and network heat map" loading="lazy">
+      <figcaption>Where the agent aims at the end of training. Top, the colour frame with the chosen grasp. Middle, the height map the network sees. Bottom, the success probability. The original 15×22 cm chips bag gets no hot spot because it is wider than the gripper opening.</figcaption>
+    </figure>
+
+    <h3>The work step by step</h3>
+    <p class="read">Each step started by checking that the previous one worked. Every run is kept in the repository with the code of its version, failed ones included.</p>
+    <div class="stepper" id="stepper">
+      <div class="steps" role="tablist" aria-label="Steps"></div>
+      <div class="step-panel" role="tabpanel" aria-live="polite"></div>
+    </div>
+
+    <h3>Results</h3>
+    <p class="read small muted">Success rate, 95% Wilson confidence interval in brackets.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Method</th><th>Carton</th><th>Can</th><th>Original chips</th></tr></thead>
+        <tbody>
+          <tr><td>Oracle, knows the true pose</td><td class="num">10/10 <span class="ci">[72–100]</span></td><td class="num">10/10 <span class="ci">[72–100]</span></td><td class="num">0/10 <span class="ci">[0–28]</span></td></tr>
+          <tr><td>Baseline, depth, rule and planner</td><td class="num">11/11 <span class="ci">[74–100]</span></td><td class="num">11/11 <span class="ci">[74–100]</span></td><td class="num">—</td></tr>
+          <tr><td>Q-map, attempt 2, training, last 4 hours</td><td class="num">87% <span class="ci">[86–88]</span></td><td class="num">85% <span class="ci">[84–86]</span></td><td class="num">0%</td></tr>
+          <tr><td>Q-map, attempt 2, fast environment</td><td class="num">54/58 = 93% <span class="ci">[84–97]</span></td><td class="num">64/72 = 89% <span class="ci">[80–94]</span></td><td class="num">0/62</td></tr>
+          <tr class="hl"><td>Q-map, attempt 2, full arm approach</td><td class="num">18/20 = 90% <span class="ci">[70–97]</span></td><td class="num">19/20 = 95% <span class="ci">[76–99]</span></td><td class="num">—</td></tr>
+          <tr><td>Q-map, attempt 1, RGB-D with the render bug</td><td class="num">4/41 = 10%</td><td class="num">3/43 = 7%</td><td class="num">0/44</td></tr>
+          <tr><td>SAC, attempt 1</td><td class="num">0/39</td><td class="num">0/39</td><td class="num">0/50</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="read small muted" style="margin-top:10px">The agent nearly matched the baseline, 90–95% versus 100%, with overlapping intervals. The baseline is hand-written, while the agent learned where and at what angle to grasp on its own.</p>
+
+    <h3>The rendering artefact</h3>
+    <div class="grid2">
+      <div class="read">
+        <p>After the first night of training neither the Q-map nor SAC had learned. In the visualizations the colour frame and the depth showed different scenes. A table with a can showed a box in colour, and the colours were washed out.</p>
+        <p>The hypothesis was that the RTX renderer blends a new frame with previous ones, and I rendered only twice after moving the objects. The test showed that after 2 renders the frame is entirely from the previous scene, after 4 it is a mix, and from 8 on it is correct. Depth is correct immediately.</p>
+        <p>The fix is 10 renders before each capture and depth only as the network input.</p>
+        <p class="muted small">In the second attempt I changed several things at once, so I do not attribute all the improvement to the bug. Still, the same network right after switching the input, before any fine-tuning, succeeded 9 times out of 19, so it had learned something from depth overnight.</p>
+      </div>
+      <div style="display:grid;gap:20px">
+        <figure class="media"><img class="zoom light" src="media/grasp/6_rl_analysis_rgb_bug.png" alt="Training success by hour, attempt 1 and attempt 2" loading="lazy"><figcaption>Training success rate by hour. Red is attempt 1, green is attempt 2. Plot labels are in Russian.</figcaption></figure>
+        <figure class="media"><img class="zoom light" src="media/grasp/6_rl_2_depth_rgb_check_rgb_check_round0.png" alt="Frames after 2, 4, 8, 16 and 32 renders" loading="lazy" style="max-height:340px;object-fit:cover;object-position:top"><figcaption>Frames after 2, 4, 8, 16 and 32 renders. Click to enlarge.</figcaption></figure>
+      </div>
+    </div>
+
+    <h3>How precise a grasp has to be</h3>
+    <div class="grid2" style="align-items:start">
+      <figure class="media"><img class="zoom light" src="media/grasp/6_rl_analysis_tolerance_map.png" alt="Grasp tolerance map" loading="lazy"><figcaption>Success rate by grasp point relative to the object centre, 28k attempts from the second training run.</figcaption></figure>
+      <div>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Distance to centre</th><th>Can</th><th>Carton</th></tr></thead>
+            <tbody>
+              <tr><td>0–1 cm</td><td class="num">93%</td><td class="num">99%</td></tr>
+              <tr><td>1–2 cm</td><td class="num">83%</td><td class="num">90%</td></tr>
+              <tr><td>2–3 cm</td><td class="num">23%</td><td class="num">74%</td></tr>
+              <tr><td>3–4 cm</td><td class="num">7%</td><td class="num">60%</td></tr>
+              <tr><td>4–5 cm</td><td class="num">3%</td><td class="num">52%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="small muted" style="margin-top:14px">The can is round, yet the finger angle still matters. Near the centre an angle of 90–135° gives 93%, 45–90° only 61%. Apparently the wrist orientation relative to the robot matters. The agent learned this and almost always grasps the can at 112.5°.</p>
+      </div>
+    </div>
+
+    <h3>A new object without forgetting the old ones</h3>
+    <div class="grid2" style="align-items:center">
+      <div class="read">
+        <p>Nobody could grasp the original chips bag, not even the oracle, because it is wider than the gripper opening. I shrank the bag to 6×2×8.7 cm. The oracle grasps it 18 times out of 18, the old agent without fine-tuning 42% of the time.</p>
+        <p>I compared six fine-tuning approaches under the same budget of 6,400 attempts, about 5 hours on a 2080 Ti, followed by 64 attempts per object. Hypotheses were written down before the results came in.</p>
+      </div>
+      <figure class="media"><img class="zoom" src="media/grasp/chips-ok.webp" alt="The agent grasps the smaller chips bag" loading="lazy"><figcaption>The variant with two networks and a switch grasping the smaller chips in the final evaluation.</figcaption></figure>
+    </div>
+
+    <div class="chart-tools">
+      <div class="seg" role="group" aria-label="Sort">
+        <button aria-pressed="true" data-sort="none">Experiment order</button>
+        <button aria-pressed="false" data-sort="chips">By chips</button>
+        <button aria-pressed="false" data-sort="old">By old objects</button>
+      </div>
+    </div>
+    <div class="chart" id="clchart"></div>
+    <div class="legend"><span><i style="background:var(--c3)"></i>chips, new object</span><span><i style="background:var(--c1)"></i>carton</span><span><i style="background:var(--c2)"></i>can</span><span class="muted">Whiskers show the 95% interval. Hover over a bar for the numbers.</span></div>
+
+    <p class="note">FiLM with an object code and replay with 20% old objects in training keep all three objects at 88–94%, on par with two separate networks. Without old objects in training, as in naive fine-tuning and adapters, forgetting is severe and fast. One seed and 64 attempts per object, the intervals of the top three variants overlap.</p>
+
+    <h4 style="margin-top:28px">Hypotheses and outcomes</h4>
+    <details><summary>Naive fine-tuning will learn chips fastest but forget the old objects <span class="tag">partly</span></summary><div>Best on chips, 95%, and forgetting was instant. By 800 attempts the carton was at 12 of 32 and the can at 7 of 32. But the prediction that the standing carton would barely suffer was wrong. In the end the carton dropped more than the can, 39% versus 56%.</div></details>
+    <details><summary>With replay, forgetting will be an early dip rather than a slow drift <span class="tag">for the can</span></summary><div>The can dipped by 800 attempts and recovered to 29–30 of 32. The carton dropped and stayed down, which looks more like drift. Replay was the fastest to reach 80% on chips, by 800 attempts.</div></details>
+    <details><summary>FiLM ends up like replay but with a deeper early dip <span class="tag">first part right</span></summary><div>Final 94, 94 and 89%, close to replay. The early dip on the can was the same as replay’s.</div></details>
+    <details><summary>Adapters will barely forget <span class="tag">wrong</span></summary><div>The can fell to 2 of 32 by 1,600 attempts and ended at 55%. Freezing the backbone is not enough, the adapters act on every object, and the correction for chips breaks the old ones.</div></details>
+    <details><summary>Training from scratch on all objects will be worst but balanced <span class="tag">half right</span></summary><div>Worst on chips, 78%. Not balanced though, the can is at 59%, and training was unstable, everything collapsed at 1,600 attempts and then recovered.</div></details>
+
+    <h3>The Vulkan layer and the shared server</h3>
+    <div class="grid2">
+      <div class="read">
+        <p>GPUs with RT cores, needed to render the camera, exist on only one lab server, two RTX 2080 Ti. The other GPUs are A100s used by other people.</p>
+        <ul class="clean">
+          <li><b>glibc.</b> The server runs Ubuntu 20.04, while Isaac Sim 4.5 needs glibc 2.34. I patched the Python binary with <code>patchelf</code> and supplied libraries via <code>LD_LIBRARY_PATH</code> to my process only.</li>
+          <li><b>Vulkan.</b> The renderer sees all 8 GPUs and ignores <code>CUDA_VISIBLE_DEVICES</code>, on the first run it took someone else’s A100. I wrote a Vulkan layer that hides other GPUs from the process.</li>
+          <li><b>Neighbours.</b> Jobs run only through <code>run.sh</code>, with a memory check, GPU lock, tmux and a watchdog that kills the job if it threatens others’ memory. A queue, <code>wait_run.sh</code>, waits for a free GPU and resumes training from a backup after a crash.</li>
+        </ul>
+      </div>
+      <figure class="media"><img class="zoom" src="media/grasp/side-v9.webp" alt="Side grasp of the carton, version 9" loading="lazy"><figcaption>Side grasp, version 9, joints move one at a time. It worked, but the wrist camera pressed into the table at up to 1000 N. After that the agent grasps only from above.</figcaption></figure>
+    </div>
+  </article>
+
+  <!-- HYBRID SOLVER -->
+  <article class="entry" id="hybrid">
+    <div class="entry-head">
+      <div class="l1"><h3>NB-Technologies, Hybrid Solver</h3><span class="date">September 2025 – November 2025</span></div>
+      <div class="l2"><span>LLM developer</span><span>Moscow, Russia</span></div>
+    </div>
+    <div class="projlink"><a class="go" href="https://github.com/leonidnn/hybrid-solver">▶ See the code</a><a class="url" href="https://github.com/leonidnn/hybrid-solver">github.com/leonidnn/hybrid-solver</a></div>
+    <ul class="bullets">
+      <li>Developed an LLM pipeline based on LLaMA 3 for solving math problems. A system of two independent solvers generates an analytical solution and Python code for a numerical solution of the same problem, and the disagreement between the results serves as a confidence metric for the answer.</li>
+    </ul>
+
+    <div class="more-head">More</div>
+    <div class="flow" aria-label="Pipeline">
+      <div class="node"><b>Problem</b><span>statement in natural language</span></div>
+      <div class="arrow">→</div>
+      <div class="node"><b>Analytical solver</b><span>LLaMA 3 derives a solution and an answer</span></div>
+      <div class="arrow">+</div>
+      <div class="node"><b>Numerical solver</b><span>LLaMA 3 writes Python code, the code is executed</span></div>
+      <div class="arrow">→</div>
+      <div class="node"><b>Answer comparison</b><span>agree, the answer can be trusted; disagree, the answer is in doubt</span></div>
+    </div>
+    <p class="read">The two solvers fail in different ways. A language model reasoning in text may drop a sign or slip on arithmetic, while code computes exactly but may misread the problem. When both paths reach the same answer independently, an error is less likely, so disagreement serves as a signal not to trust the answer.</p>
+  </article>
+
+  <!-- COOL DEAL -->
+  <article class="entry" id="cooldeal">
+    <div class="entry-head">
+      <div class="l1"><h3>Cool Deal, wearable climate-control systems</h3><span class="date">December 2024 – September 2025</span></div>
+      <div class="l2"><span>Founder, project lead</span><span>Moscow, Russia</span></div>
+    </div>
+    <ul class="bullets">
+      <li>Led a team of 5, three engineers, a sales lead and myself, from idea to a working prototype of a wearable climate-control system.</li>
+      <li>Designed and built prototypes, CAD, sensors, microcontroller firmware, bench testing.</li>
+      <li>Raised a ₽1M “Student Startup” grant for R&amp;D and testing.</li>
+      <li>Handled sales. Ran 2 pilot deployments, tested the hypothesis based on their results and closed the project.</li>
+    </ul>
+
+    <div class="more-head">More</div>
+    <figure class="media" style="margin-bottom:24px">
+      <img class="zoom light" src="media/cooldeal-jacket.jpg" alt="Cool Deal, cooled workwear for hot production sites" loading="lazy">
+      <figcaption>Cooled workwear for hot production sites, the offer for factories. In Russian.</figcaption>
+    </figure>
+    <p class="read">The system was first built for motorcyclists, then the project moved to cooled workwear for hot workshops. Inside is compressor cooling with thermoelectric subcooling in a fire-safe design. The team completed the Phystech.Idea accelerator, the project ranked #956 in the 2024 “Top 1000 University Startups”, and MIPT issued a letter of support.</p>
+
+    <h3>Letter of intent from IEK Group</h3>
+    <div class="grid2" style="align-items:start">
+      <div class="read">
+        <p>The electrical-equipment holding became interested in the technology as personal protective equipment for workers in hot workshops with plastic moulding, curing ovens, extrusion and welding. Eight production sites, a projected kit price of ₽20,000, about 2,500 kits a year, around ₽50M in total.</p>
+        <p class="muted small">A letter of intent is not a purchase commitment. In later discussions the deal did not go through.</p>
+      </div>
+      <div class="docs" style="grid-template-columns:1fr 1fr">
+        <button class="doc" data-full="media/docs/iek-loi-1.png" data-cap="IEK Group, letter of intent, page 1, 11 Sep 2025, in Russian"><img src="media/docs/iek-loi-1.png" alt="IEK letter, page 1" loading="lazy"><div><b>IEK letter, p. 1</b>11 Sep 2025</div></button>
+        <button class="doc" data-full="media/docs/iek-loi-2.png" data-cap="IEK Group, letter of intent, page 2, in Russian"><img src="media/docs/iek-loi-2.png" alt="IEK letter, page 2" loading="lazy"><div><b>IEK letter, p. 2</b>volume and amount</div></button>
+      </div>
+    </div>
+
+    <h3>Documents <span class="muted small" style="font-weight:400">in Russian</span></h3>
+    <div class="docs">
+      <button class="doc wide" data-full="media/docs/diploma-studstartup-1.png" data-cap="Winner’s diploma, Student Startup program, Foundation for Assistance to Innovation, 2024"><img src="media/docs/diploma-studstartup-1.png" alt="Student Startup diploma" loading="lazy"><div><b>Student Startup</b>winner’s diploma, 2024</div></button>
+      <button class="doc" data-full="media/docs/top1000-1.png" data-cap="Certificate for #956 in the Top 1000 University Startups ranking, 2024"><img src="media/docs/top1000-1.png" alt="Top 1000 certificate" loading="lazy"><div><b>Top 1000 startups</b>#956, 2024</div></button>
+      <button class="doc" data-full="media/docs/mipt-letter-1.png" data-cap="Letter of support from MIPT, 28 Oct 2024"><img src="media/docs/mipt-letter-1.png" alt="MIPT letter of support" loading="lazy"><div><b>MIPT letter of support</b>28 Oct 2024</div></button>
+    </div>
+
+    <h3>Press <span class="muted small" style="font-weight:400">in Russian</span></h3>
+    <ul class="press">
+      <li><a href="https://www.kp.ru/daily/27675/5063858/" rel="noopener">Komsomolskaya Pravda</a></li>
+      <li><a href="https://наука-техника.рф/news/Na-bajjke-s-kondicionerom-" rel="noopener">Nauka i Tekhnika</a> <span>— Riding with air conditioning</span></li>
+      <li><a href="https://наука.рф/news/pozharobezopasnuyu-sistemu-klimat-kontrolya-dlya-mototsiklistov-sozdali-v-mfti/" rel="noopener">Nauka.rf</a></li>
+      <li><a href="https://www.mipt.ru/news/na-bayke-s-konditsionerom-v-mfti-razrabotali-pozharobezopasnuyu-sistemu-klimat-kontrolya-dlya-motots" rel="noopener">MIPT</a></li>
+      <li><a href="https://www.fasie.ru/press/fund/pri-podderzhke-fonda-sodeystviya-innovatsiyam-sozdana-sistema-klimat-kontrolya-dlya-mototsiklistov/" rel="noopener">Foundation for Assistance to Innovation</a></li>
+      <li><a href="https://kriofrost.academy/lenta/novosti/pri-podderzhke-fonda-sodeystviya-innovaciyam-sozdana-sistema-klimat-kontrolya-dlya-motociklistov/" rel="noopener">Kriofrost Academy</a></li>
+      <li><a href="https://rutube.ru/video/70881597ba4de7b5c7f98f4e797b54d3/?t=279&amp;r=plemwd" rel="noopener">REN TV</a> <span>— TV segment, from 4:39</span></li>
+    </ul>
+  </article>
+
+  <!-- SBER -->
+  <article class="entry" id="sber">
+    <div class="entry-head">
+      <div class="l1"><h3>Sber, Amazme recommender systems team</h3><span class="date">July 2024 – November 2024</span></div>
+      <div class="l2"><span>Data Scientist</span><span>Moscow, Russia</span></div>
+    </div>
+    <ul class="bullets">
+      <li>Built PySpark data marts from raw clickstream.</li>
+      <li>Fine-tuned candidate-retrieval models in PyTorch and evaluated them on offline metrics.</li>
+      <li>Handled bug reports and traced the causes of anomalies.</li>
+      <li>Wrote unit tests.</li>
+    </ul>
+  </article>
+</section>
+
+<section class="chapter" id="contact">
+  <div class="sec-title"><h2>Contact</h2></div>
+  <p class="contacts">
+    <a href="mailto:nekrylov.ln@phystech.edu">nekrylov.ln@phystech.edu</a>
+    <a href="https://t.me/leonid_n_n">t.me/leonid_n_n</a>
+    <a href="https://github.com/leonidnn">github.com/leonidnn</a>
+  </p>
+</section>
+</main>
+<footer></footer>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer"><img alt=""><div class="cap"></div></div>
+<div class="tip" id="tip"></div>
+
+<script>
+const STEPS_DATA = [
+  ['Server and Isaac Sim', 'GPUs with RT cores exist on only one server, two RTX 2080 Ti. The server has an old glibc, so the environment had to be patched. Rendering through Vulkan saw all 8 GPUs and on the first run took someone else’s A100. I wrote a Vulkan layer that hides other GPUs, and <code>run.sh</code>, the only way to launch, with a watchdog.', []],
+  ['Scene', 'The scene and robot come from MetaIsaacGrasp. The table and floor from Nucleus would not load and the renderer hung, so I replaced them with boxes. Mounted a camera above and checked that IK takes the wrist exactly where it should, 0.0 mm error.', ['1_setup_robot_scene_rgb.png', '1_setup_robot_scene_depth.png']],
+  ['Objects', 'Converted the models to USD and scaled them to real sizes. Carton 6×6×19 cm, can 8 cm in diameter, chips bag 15×22×5 cm. Checked how they settle on the table. The carton stands or lies, the can only stands because it rolls on its side, the chips only lie.', ['objects.webp']],
+  ['Top grasp', 'At first it kept missing. It turned out that in the USD the Hand-E fingers point along the wrist’s y axis, not z as in the URDF. After fixing that, the grasp worked.', []],
+  ['Side grasp, 10 versions', 'The arm knocked the box over, fell short or twisted through itself. I wrote my own planner with UR10e kinematics via DH, matching the simulator to 0.0 mm, batched IK and sphere collisions. Plan-vs-actual plots showed the arm lagging and cutting corners, up to 0.16 rad. In v9 the joints moved one at a time and the grasp succeeded, but the wrist camera pressed into the table at up to 1000 N, and it was missing from the collision model. I decided to grasp only from above.', ['side-knocked.webp', '3_grasp_side_v7_collisions_joints_plan_vs_fact.png']],
+  ['Environment and oracle', 'Every episode is random, with object, position, rotation and pose changing. The oracle knows the true pose and verifies the environment works. Carton and can 10 of 10, chips 0 of 10, the bag is wider than the 8.5 cm gripper opening. Along the way I found which axis the fingers close along. At angle 0 the lying carton 10 of 10, at 90 only 3 of 10.', []],
+  ['Baseline without learning', 'A rule on the depth map. Find the object, take its centre, turn the fingers across the short side, move the arm with the planner. Carton 11 of 11, can 11 of 11.', ['baseline-tetrapak.webp']],
+  ['Fast environment', 'With a real arm approach one attempt takes 1–2 minutes, while PPO needs tens of thousands. I built a fast environment, 8 tables in one process, the arm teleports above the point, then descends, closes and lifts, 1–2 s per attempt. I chose algorithms with a replay buffer, the Q-map and SAC.', ['6_rl_2_depth_fly_check_8envs_what_agent_sees.png']],
+  ['Attempt 1', 'Q-map and SAC for 8 hours each, in parallel on two 2080 Ti, with colour and depth input. Neither learned. The Q-map reached about 7%, SAC degenerated into “always the table centre”. In the morning I found the delayed colour frame bug.', ['sac-fail.webp']],
+  ['Attempt 2', 'Only the Q-map and only depth, choices restricted to object cells, ε decaying over 8 hours, 8 tables. No progress for the first hour and a half, then by the hour 36, 54, 70, 80, 86% and a plateau. 12 hours and 28,488 attempts.', ['6_rl_2_depth_train_qmap_d_viz_curves.png', 'fast-can-ok.webp']],
+  ['Grasp precision', 'From the logs of the second attempt I built a map of successful grasps. The agent takes the can only within 2 cm of its centre, and for the carton the angle matters too. The agent learned on its own to take the can at 112.5°.', ['6_rl_analysis_tolerance_map.png']],
+  ['Full arm approach', 'The agent picks the point, and the arm travels from its home pose with the planner, as for the baseline. Carton 18 of 20, can 19 of 20, almost the same as in the simplified training environment.', ['arm-tetrapak-side-ok.webp', 'arm-can-fail.webp']],
+  ['Release package', 'Packaged the weights and minimal code so the agent can be downloaded and tried without a simulator, by placing an object and seeing where it grasps, or in Isaac Sim. One command downloads it.', []],
+  ['Smaller chips', 'The bag was shrunk to 6×2×8.7 cm, and the old agent grasps it 42% of the time. Six fine-tuning approaches under an equal budget are compared below.', ['chips-ok.webp', '7_chips_1_router_train_viz_curves.png']],
+];
+const CL_DATA = [
+  ['Old agent, no fine-tuning', [[42,27,58],[93,84,97],[89,80,94]], '—'],
+  ['Two networks and a switch', [[88,77,94],[95,87,98],[95,87,98]], '4,000'],
+  ['FiLM, 20% old', [[94,85,98],[94,85,98],[89,79,95]], '4,000'],
+  ['Naive fine-tuning', [[95,87,98],[39,28,51],[56,44,68]], '3,200'],
+  ['Fine-tuning and 20% replay', [[88,77,94],[88,77,94],[89,79,95]], '800'],
+  ['Adapters', [[88,77,94],[75,63,84],[55,43,66]], '3,200'],
+  ['From scratch on all objects', [[78,67,87],[78,67,87],[59,47,71]], '2,400'],
+];
+const SLOT_DATA = [];
+const EV_DATA = [];
+const MODES_DATA = [
+  ['Guarding a point', 'guardian', 'Sentry', 'A stranger heads for the guarded point. The dog moves out early, by the time the stranger needs to get there rather than by distance, because the robot is half as fast as a person. Distance chooses the display. From 10 m it tracks with its head, from 2–5 m it barks, closer it steps between the intruder and the target, growls and lunges without contact.'],
+  ['The feint', 'feint', 'Sentry', 'One stranger draws attention, a second comes from the other side. Every 2.5 s the dog glances over its shoulder, and it hears footsteps within 4 m. When intruders come from different sides it falls back closer to the target.'],
+  ['Guarding the owner', 'bodyguard', 'Sentry', 'The guarded target is the owner walking around the room. The owner is never treated as a threat.'],
+  ['Fetch', 'fetch', 'Fetch', 'A throw, run to the ball, take it in the mouth, bring it to the owner’s feet and play-bow, waiting for the next throw.'],
+  ['Petting', 'good_boy', 'Companion', 'The owner pets the dog, it leans into the hand, lies down, rolls over. When the petting stops, after 1–3 s it nudges for more. Touches are classified by body zone and type, stroke, pat or shove.'],
+  ['Waiting for the owner', 'waiting', 'Missing owner', 'The owner left, the dog goes to the door, waits, whines, paces. On return it greets the owner excitedly. Behaviour is measured with markers from Topál et al. 1998.'],
+  ['Sleep', 'sweet_dreams', 'Rest', 'Low energy, especially after the lights go off. Walk to the bed, turn round, lie down and curl up. A bang during sleep causes a startle.'],
+  ['Curiosity', 'curious', 'Explore', 'A new object. The dog sneaks up with its head low, sniffs, noses it. Familiarity grows while exploring and fades over minutes.'],
+  ['Reflexes', 'reflexes', 'Startle, Stagger, Get-up', 'A bang makes the dog flinch, weaker with each repetition. From a shove it steps to recover through the walk policy. After a fall the get-up policy takes over, then a stance and a shake-off.'],
+  ['Brain', 'mind', 'explainability', 'Every tick is logged with the scores of all modes and the two main factors behind the winner.'],
+  ['Through the dog’s eyes', 'pov', 'perception', 'A head-mounted camera. Vision works as a sensor model with a 240° field of view, occlusion, noise and dropouts. The brain never reads simulator state directly.'],
+  ['With and without emotions', 'with_without', 'comparison', 'The same scenario with and without emotions. Without them the dog does not startle, whines less, greets its owner with half the energy and is slightly slower to its post.'],
+  ['A day in the life', 'day', '3.5 minutes', 'No script for modes, 10 mode switches, 7 different modes, 0 falls.'],
+];
+const PET_MEDIA = 'media/pet/en/';
+const UI = {step: (i, n) => `step ${i} of ${n}`, back: '← Back', next: 'Next →', toEighty: 'to 80% on chips', attempts: 'attempts', objs: ['chips', 'carton', 'can'], crit: 'Criterion', ex: 'Example'};
+</script>
+<script src="site.js"></script>
+</body>
+</html>

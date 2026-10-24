@@ -334,22 +334,58 @@
       <div class="l1"><h3>NB-Technologies, Hybrid Solver</h3><span class="date">September 2025 – November 2025</span></div>
       <div class="l2"><span>LLM developer</span><span>Moscow, Russia</span></div>
     </div>
-    <div class="projlink"><a class="go" href="https://github.com/leonidnn/hybrid-solver">▶ See the code</a><a class="url" href="https://github.com/leonidnn/hybrid-solver">github.com/leonidnn/hybrid-solver</a></div>
+    <div class="projlink"><a class="go" href="https://huggingface.co/spaces/leonid-nn/hybrid-solver">▶ Try the solver</a><a class="url" href="https://huggingface.co/spaces/leonid-nn/hybrid-solver">huggingface.co/spaces/leonid-nn/hybrid-solver</a></div>
+    <div class="projlink" style="margin-top:-8px"><a class="go" href="https://github.com/leonidnn/hybrid-solver">▶ See the code</a><a class="url" href="https://github.com/leonidnn/hybrid-solver">github.com/leonidnn/hybrid-solver</a></div>
     <ul class="bullets">
-      <li>Developed an LLM pipeline based on LLaMA 3 for solving math problems. A system of two independent solvers generates an analytical solution and Python code for a numerical solution of the same problem, and the disagreement between the results serves as a confidence metric for the answer.</li>
+      <li>A math problem solver that either gives the correct answer or honestly says it could not get one.</li>
+      <li>The key idea is to turn a language model from a Monte Carlo algorithm, which always answers but is sometimes wrong, into a Las Vegas algorithm, as in the ZPP class. Three independent methods solve the problem, model reasoning, exact computation in SymPy and a numerical check, and an answer is given only if all of them agree.</li>
     </ul>
 
     <div class="more-head">More</div>
-    <div class="flow" aria-label="Pipeline">
-      <div class="node"><b>Problem</b><span>statement in natural language</span></div>
-      <div class="arrow">→</div>
-      <div class="node"><b>Analytical solver</b><span>LLaMA 3 derives a solution and an answer</span></div>
-      <div class="arrow">+</div>
-      <div class="node"><b>Numerical solver</b><span>LLaMA 3 writes Python code, the code is executed</span></div>
-      <div class="arrow">→</div>
-      <div class="node"><b>Answer comparison</b><span>agree, the answer can be trusted; disagree, the answer is in doubt</span></div>
+    <div class="grid2">
+      <figure class="media"><img class="zoom light" src="media/hybrid/geometry.jpg" alt="Geometry: three methods agree on the square root of 109, the drawing is built from the solution's coordinates" loading="lazy"><figcaption>Geometry. Three methods agree on √109, and the drawing is built from the coordinates computed by the exact solution. Interface in Russian.</figcaption></figure>
+      <figure class="media"><img class="zoom light" src="media/hybrid/area.jpg" alt="Area between a parabola and a line, answer 4/3" loading="lazy"><figcaption>Area between a parabola and a line. Answer 4/3, with the region shaded.</figcaption></figure>
     </div>
-    <p class="read">The two solvers fail in different ways. A language model reasoning in text may drop a sign or slip on arithmetic, while code computes exactly but may misread the problem. When both paths reach the same answer independently, an error is less likely, so disagreement serves as a signal not to trust the answer.</p>
+
+    <h3>The idea</h3>
+    <p class="read">A language model solving a problem behaves like a Monte Carlo probabilistic algorithm. It always gives an answer, but sometimes a wrong one, and a wrong answer looks just as confident as a right one. For a learning tool this is the worst case: a student cannot check the answer, and an error is presented as truth.</p>
+    <p class="read">Complexity theory has the class ZPP, problems solved by a Las Vegas algorithm. Such an algorithm never gives a wrong answer and instead sometimes says “don’t know”. The project carries this idea over to a language model. The model can still make mistakes, but the solver is built so that a mistake does not reach the user.</p>
+
+    <h3>How it works</h3>
+    <div class="flow" aria-label="Solver pipeline">
+      <div class="node"><b>Problem analysis</b><span>topic, answer type, whether a drawing is needed</span></div>
+      <div class="arrow">→</div>
+      <div class="node"><b>Reasoning</b><span>step-by-step solution, like a teacher</span></div>
+      <div class="arrow">+</div>
+      <div class="node"><b>Exact computation</b><span>SymPy code, exact arithmetic</span></div>
+      <div class="arrow">+</div>
+      <div class="node"><b>Numerical check</b><span>brute force, Monte Carlo, numerical methods</span></div>
+      <div class="arrow">→</div>
+      <div class="node"><b>Comparison</b><span>all agree, an answer; otherwise, a refusal</span></div>
+    </div>
+    <p class="read">The three methods run in parallel and know nothing about each other’s answers. Their errors come from different sources: reasoning fails on logic and arithmetic, symbolic code fails on the setup but computes exactly, and the numerical check cannot do clever reasoning but brute force is immune to logical mistakes. For a user to see a wrong answer, all three methods must fail, and fail in the same way.</p>
+    <p class="read">Answers are compared in SymPy: √109, <code>sqrt(109)</code> and 10.4403065 count as one answer, and the order of roots does not matter. If code crashes, the model fixes it once from the error message, still without seeing the other methods’ answers.</p>
+
+    <h3>When an answer is given</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Situation</th><th>What the user sees</th></tr></thead>
+        <tbody>
+          <tr class="hl"><td>At least two methods answered, all answers agree, at least one is exact</td><td>The answer and a drawing</td></tr>
+          <tr><td>Methods gave different answers</td><td>“Could not get a reliable answer”</td></tr>
+          <tr><td>Only one method answered</td><td>“Could not get a reliable answer”, nothing to confirm it with</td></tr>
+          <tr><td>A proof problem</td><td>The solution is marked as unverified</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="read small muted" style="margin-top:10px">The solver never picks the “more likely” of disagreeing answers.</p>
+
+    <h3>Drawings from the computation</h3>
+    <p class="read">In geometry problems the exact-solution code not only computes the answer but also outputs the figure in coordinates, and the server renders it as SVG. The drawing is the same configuration the code computed the answer on, so if the code misread the problem, it shows in the picture. For calculus problems it plots functions and shaded regions.</p>
+
+    <h3>Experiments and limitations</h3>
+    <p class="read">How close the solver gets to ZPP is measured on three problem sets with reference answers: school problems from Russian MATH-500, university problems from U-MATH and olympiad problems from OlympiadBench. The main metrics are the accuracy of given answers and coverage, how often the solver answers at all. For comparison, the same model is scored without the cross-check, like an ordinary chatbot.</p>
+    <p class="read muted small">There is no strict zero-error guarantee: one model produces all methods, and if it misreads the problem the same way, the methods can agree on a wrong answer. Next steps are different models for different methods and a rerun on disagreement.</p>
   </article>
 
   <!-- COOL DEAL -->

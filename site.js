@@ -6,13 +6,8 @@
   const root = document.documentElement;
   const cssv = v => getComputedStyle(root).getPropertyValue(v).trim();
 
-  try { const t = localStorage.getItem('theme'); if (t) root.dataset.theme = t; } catch(e) {}
-  $('#theme').addEventListener('click', () => {
-    const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-    root.dataset.theme = dark ? 'light' : 'dark';
-    try { localStorage.setItem('theme', root.dataset.theme); } catch(e) {}
-    drawCL(); drawSlot();
-  });
+  try { localStorage.removeItem('theme'); } catch(e) {}
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { drawCL(); drawSlot(); });
 
   const links = $$('.nav a'), secs = links.map(a => $(a.getAttribute('href'))).filter(Boolean);
   function onScroll(){

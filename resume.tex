@@ -1,0 +1,184 @@
+\documentclass[10pt,a4paper]{article}
+
+% Русский язык и шрифты
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{russian}
+
+% Шрифт с поддержкой кириллицы
+\setmainfont{DejaVu Sans}
+
+% Поля
+\usepackage{geometry}
+\geometry{
+    left=1.5cm,
+    right=1.5cm,
+    top=1.5cm,
+    bottom=1.5cm
+}
+
+% Списки
+\usepackage{enumitem}
+
+% Заголовки
+\usepackage{titlesec}
+
+% Цвета и ссылки
+\usepackage{xcolor}
+\definecolor{linkbtn}{HTML}{1F5FD6}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=linkbtn,
+    pdftitle={CV - Leonid Nekrylov}
+}
+
+\titleformat{\section}
+{\large\bfseries}
+{}
+{0em}
+{}
+[\titlerule]
+
+\titlespacing{\section}{0pt}{1ex}{1ex}
+
+\setlength{\parindent}{0pt}
+
+% Запись в разделе опыта: название, дата, роль, место одним блоком
+\newcommand{\entry}[4]{%
+  \par\noindent\textbf{#1}\hfill\textit{#2}\par
+  \noindent\textit{#3}\hfill\textit{#4}\par\vspace{2pt}}
+\newcommand{\entrygap}{\par\vspace{0.5cm}}
+
+% Ссылка-кнопка: синяя плашка и подчёркнутый адрес рядом
+\setlength{\fboxsep}{2.5pt}
+\newcommand{\projlink}[3]{%
+  \par\noindent\href{#1}{\colorbox{linkbtn}{\textcolor{white}{\small\textbf{▶~#2}}}}%
+  \hspace{6pt}\href{#1}{\small\underline{#3}}\par\vspace{3pt}}
+
+\begin{document}
+
+\pagestyle{empty}
+
+% ================= HEADER =================
+
+\begin{center}
+
+{\LARGE \textbf{Леонид Некрылов}}
+
+\vspace{0.1cm}
+
+{\large Robot Learning Engineer}
+
+\vspace{0.2cm}
+
+Москва |
+\href{mailto:nekrylov.ln@phystech.edu}{nekrylov.ln@phystech.edu}
+
+\\
+
+\href{https://t.me/leonid_n_n}{t.me/leonid\_n\_n}
+
+\end{center}
+
+
+% ================= EDUCATION =================
+
+\section*{Образование}
+
+\textbf{Московский физико-технический институт (МФТИ)} \hfill \textit{2023 -- 2027} \\
+\textit{Бакалавриат, Физтех-школа прикладной математики и информатики (ФПМИ)} \hfill Долгопрудный, РФ \\
+Направление: «Прикладная математика и физика»
+
+\subsection*{Релевантные курсы}
+
+\vspace{0.1cm}
+\begin{itemize}[leftmargin=*,nosep]
+\item \textbf{Оптимизация и ML:} Годовой курс по методам оптимизации в ML (Д. Меркулов), Машинное обучение-1 (Р. Нейчев), LLM (Giraffe AI)
+\item \textbf{Reinforcement Learning:} Самостоятельное освоение курса UC Berkeley CS285 (\textit{Deep Reinforcement Learning}, Sergey Levine).
+\item \textbf{Математика:} Теория вероятностей, Случайные процессы, Математическая статистика, Линейная алгебра, Математический и функциональный анализ.
+\item \textbf{Computer Science:} Алгоритмы и структуры данных, C++, Базы данных (PostgreSQL), Python.
+\item \textbf{Физика/Инженерия:} Введение в робототехнику (О. Буличев), Теоретическая механика.
+\end{itemize}
+
+
+% ================= EXPERIENCE =================
+
+\section*{Опыт работы и проекты}
+
+\entry{\parbox[t]{0.65\textwidth}{UNITAS: исследование 3D World-Action Model для роботических манипуляций}}{Ноябрь 2026 -- настоящее время}{Исследовательский проект}{}
+\projlink{https://github.com/leonidnn/unitas-wam-evaluation.git}{Смотреть код}{github.com/leonidnn/unitas-wam-evaluation}
+\begin{itemize}[leftmargin=*,nosep]
+\item Развернул UNITAS~--- модель на 1,7 млрд параметров для генерации действий робота и прогнозирования движения объектов в 3D.
+\item Подготовил воспроизводимую оценку policy в LIBERO: сравнение при разном освещении на одинаковых начальных состояниях, сопоставление checkpoints и измерение задержки инференса.
+\item Реализовал запись эпизодов симуляции и локальное воспроизведение в MuJoCo с произвольного ракурса без повторного запуска нейросети.
+\item Проверил перенос модели на собственную сцену: подготовил вход из RGB-видео, в котором LLM оценила глубину. Сравнил проекции предсказанных траекторий с отложенными кадрами.
+\end{itemize}
+
+\entrygap
+
+\entry{Pet or Threat, поведение четвероногого робота Unitree Go1}{Октябрь 2026}{Пет-проект, MuJoCo}{Москва, РФ}
+\projlink{https://leonidnn.github.io/pet-or-threat-site/}{Смотреть видео}{leonidnn.github.io/pet-or-threat-site}
+\begin{itemize}[leftmargin=*,nosep]
+\item Реализовал автономный выбор поведения четвероногого робота в симуляции без внешних команд: охрана, игровое и социальное взаимодействие, ожидание владельца и отдых.
+\item Модуль принятия решений получает данные восприятия и формирует высокоуровневые команды перемещения и направления взгляда; локомоцию обеспечивают готовые RL-политики. Модуль не зависит от симулятора; адаптация к другому роботу выполняется заменой нижнего уровня управления.
+\end{itemize}
+
+\entrygap
+
+\entry{ЦКМ МФТИ, RL-агент для схвата объектов по RGB-D}{Сентябрь 2026 -- Октябрь 2026}{Исследовательский проект, Isaac Sim, UR10e}{Москва, РФ}
+\projlink{https://github.com/leonidnn/isaac-rgbd-grasping}{Смотреть видео и код}{github.com/leonidnn/isaac-rgbd-grasping}
+\begin{itemize}[leftmargin=*,nosep]
+\item Построил в Isaac Sim среду для обучения схвату с рандомизацией объектов. Разработал собственный Vulkan-слой для явного выбора GPU без использования остальных устройств на общем многопользовательском сервере.
+\item Обучил RL-агента: сеть по карте глубины оценивает успешность схвата для каждой точки и угла, агент выбирает вариант с максимальной оценкой.
+\item Проверка в новых случайных позах с полным подводом манипулятора дала 18/20 и 19/20 успешных схватов на двух объектах. SAC не освоил задачу за 5.7 тыс. попыток.
+\item Проверил перенос навыка на сложный деформируемый объект (пакет) и сравнил стратегии дообучения с сохранением качества на прежних объектах. Лучший из проверенных вариантов~--- две сети с переключением по типу объекта: 88\% на новом объекте против 42\% без дообучения и 95\% на прежних.
+\item Выявил артефакт рендеринга, исказивший обучение, и исправил постановку.
+\end{itemize}
+
+\entrygap
+
+\entry{НБ-Технологии, Hybrid Solver}{Сентябрь 2025 -- Ноябрь 2025}{LLM-разработчик}{Москва, РФ}
+\projlink{https://huggingface.co/spaces/leonid-nn/hybrid-solver}{Попробовать решатель}{huggingface.co/spaces/leonid-nn/hybrid-solver}
+\projlink{https://github.com/leonidnn/hybrid-solver}{Смотреть код}{github.com/leonidnn/hybrid-solver}
+\begin{itemize}[leftmargin=*,nosep]
+\item Разработал решатель математических задач с проверкой ответа и отказом от выдачи результата, если проверка не пройдена.
+\item Использовал принцип перехода от алгоритма Монте-Карло к алгоритму Лас-Вегас (аналогия с классом ZPP): ответ выдаётся только при согласованности результатов трёх независимых методов~--- рассуждения языковой модели, точного вычисления в SymPy и численной проверки.
+\end{itemize}
+
+\entrygap
+
+\entry{Проект Cool Deal носимых систем климат-контроля}{Декабрь 2024 -- Сентябрь 2025}{Основатель, тимлид проекта}{Москва, РФ}
+\begin{itemize}[leftmargin=*,nosep]
+\item Руководил командой из 5 человек, объединяющей разработку и продажи, от идеи до рабочего прототипа носимой системы климат-контроля.
+\item Проектировал и собирал прототипы: CAD, датчики, прошивка микроконтроллеров, стендовые испытания.
+\item Привлёк грант 1 млн р. «Студенческий стартап» на НИОКР и испытания.
+\item Занимался продажами и провёл 2 пилотных внедрения. По результатам проверки гипотезы принял решение о закрытии проекта.
+\end{itemize}
+
+\entrygap
+
+\entry{Сбер (Команда рекомендательных систем / Amazme)}{Июль 2024 -- Ноябрь 2024}{Data Scientist}{Москва, РФ}
+\begin{itemize}[leftmargin=*,nosep]
+\item Собирал витрины на PySpark из сырого кликстрима.
+\item Дообучал и валидировал модели отбора кандидатов для рекомендательной системы на PyTorch по офлайн-метрикам.
+\item Локализовал причины аномалий в работе рекомендательной системы по сообщениям об ошибках; разрабатывал юнит-тесты.
+\end{itemize}
+
+\vspace{0.2cm}
+
+
+% ================= SKILLS =================
+
+\section*{Технические навыки}
+
+\begin{itemize}[leftmargin=*,nosep]
+\item Python (NumPy, SciPy, PyTorch, Matplotlib, PySpark, SymPy), PostgreSQL, Git, Pytest, Linux, \LaTeX, Docker, ROS2 NVIDIA Isaac Sim / Isaac Lab, MuJoCo
+\item Английский~-- C1 (TOEFL iBT 107).
+\end{itemize}
+
+
+
+\end{document}

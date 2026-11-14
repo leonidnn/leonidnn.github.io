@@ -37,7 +37,7 @@
       <a href="https://t.me/leonid_n_n">t.me/leonid_n_n</a>
       <a href="https://github.com/leonidnn">github.com/leonidnn</a>
     </p>
-    <div class="projlink" style="margin-top:22px"><a class="go" href="Nekrylov_CV.pdf" download>↓ Скачать прежнюю версию резюме в PDF</a></div>
+    <div class="projlink" style="margin-top:22px"><a class="go" href="Nekrylov_CV.pdf" download>↓ Скачать резюме в PDF</a></div>
   </div>
   <div class="photo"><img src="media/photo.jpg" alt="Леонид Некрылов" onerror="this.parentNode.remove()"></div>
 </div>
@@ -67,13 +67,35 @@
     <li><b>Reinforcement Learning.</b> Самостоятельное освоение курса UC Berkeley CS285, Deep Reinforcement Learning (Sergey Levine).</li>
     <li><b>Математика.</b> Теория вероятностей, случайные процессы, математическая статистика, линейная алгебра, математический и функциональный анализ.</li>
     <li><b>Computer Science.</b> Алгоритмы и структуры данных, C++, базы данных (PostgreSQL), Python.</li>
-    <li><b>Физика и инженерия.</b> Введение в робототехнику, теоретическая механика.</li>
+    <li><b>Физика и инженерия.</b> Введение в робототехнику (О. Буличев), теоретическая механика.</li>
   </ul>
 </section>
 
 <!-- ============ ОПЫТ РАБОТЫ И ПРОЕКТЫ ============ -->
 <section class="chapter" id="experience">
   <div class="sec-title"><h2>Опыт работы и проекты</h2></div>
+
+
+  <article class="entry unitas" id="unitas">
+    <div class="entry-head"><div class="l1"><h3>UNITAS: исследование 3D World-Action Model для роботических манипуляций</h3><span class="date">Ноябрь 2026 — настоящее время</span></div><div class="l2"><span>Исследовательский проект</span></div></div>
+    <div class="unitas-hero">
+      <p class="unitas-eyebrow">UNITAS / 3D WORLD-ACTION MODEL</p>
+      <h3>Как робот двигается<br>и что будет дальше.</h3><p class="unitas-intro">UNITAS умеет выбирать действия робота и предсказывать движение объектов. Я запустил модель в LIBERO, проверил её при разном освещении, а затем попробовал на собственном видео с рукой и кружкой.</p>
+      <div class="unitas-facts"><span>1,7 млрд параметров</span><span>40 эпизодов LIBERO</span><span>Прогноз на 1 секунду</span></div>
+      <div class="unitas-videos"><figure><div class="unitas-video-label">Обычный свет</div><video controls muted loop playsinline preload="metadata" aria-label="Обычный свет"><source src="media/unitas/libero-baseline.mp4" type="video/mp4"></video></figure><figure><div class="unitas-video-label">Приглушённый свет</div><video controls muted loop playsinline preload="metadata" aria-label="Приглушённый свет"><source src="media/unitas/libero-dim.mp4" type="video/mp4"></video></figure></div><p class="unitas-caption">Робот ставит белую кружку на тарелку при обычном и приглушённом свете. Оба эпизода начинаются с одного состояния; в обоих используется fine-tuned версия модели.</p>
+      <div class="unitas-actions"><a href="https://github.com/leonidnn/unitas-wam-evaluation">Смотреть код ↗</a><a href="#unitas-results">Результаты экспериментов ↓</a></div>
+    </div>
+    <h3>Что я сделал</h3><ul class="bullets"><li>Запустил готовую UNITAS: модель на 1,7 млрд параметров, которая выбирает действия робота и предсказывает движение объектов в 3D.</li><li>Сравнил две версии модели в LIBERO при обычном и приглушённом свете. Для честного сравнения использовал одинаковые начальные состояния и записывал время работы модели.</li><li>Добавил запись эпизодов: их можно открыть в MuJoCo на ноутбуке и рассмотреть с любой стороны, не запуская нейросеть заново.</li><li>Подготовил для модели собственное видео, оценив глубину с помощью LLM. Затем наложил предсказанные траектории на кадры продолжения, которых модель не видела.</li></ul>
+    <h3 id="unitas-results">01 / Как робот справился с задачей</h3><p class="read">Взял два готовых checkpoint — fine-tuned и scratch — и проверил каждый при обычном и приглушённом свете. Во всех четырёх сериях робот начинал из тех же десяти состояний и должен был поставить белую кружку на тарелку.</p>
+    <div class="tablewrap"><table><thead><tr><th scope="col">Checkpoint</th><th scope="col">Освещение</th><th scope="col">Успешные эпизоды</th><th scope="col">Медиана Policy.act</th></tr></thead><tbody><tr><td>Fine-tuned</td><td>Обычный свет</td><td><strong>10/10</strong></td><td>1.47 с</td></tr><tr><td>Fine-tuned</td><td>Приглушённый свет</td><td><strong>10/10</strong></td><td>1.49 с</td></tr><tr><td>Scratch</td><td>Обычный свет</td><td><strong>10/10</strong></td><td>1.49 с</td></tr><tr><td>Scratch</td><td>Приглушённый свет</td><td><strong>10/10</strong></td><td>1.46 с</td></tr></tbody></table></div>
+    <p class="unitas-note">Робот справился во всех 40 эпизодах. Пока это проверка одной задачи на десяти начальных состояниях — по ней рано судить обо всём LIBERO. Есть и различие настроек: fine-tuned использует историю и прогноз на 20 шагов, scratch — на 30. Поэтому результат нельзя объяснить одним лишь предобучением. Время работы измерялось в разных сеансах и даёт только ориентир.</p>
+    <h3>02 / Один эпизод — разные ракурсы</h3><p class="read">Обычное видео привязывает зрителя к одной камере. Я сохраняю ещё и сцену со всеми состояниями: потом её можно открыть в MuJoCo, повернуть камеру, остановиться на нужном кадре и рассмотреть движение. Для просмотра не нужны веса UNITAS и повторный запуск модели.</p><figure class="media"><img class="zoom light" src="media/unitas/replay.png" alt="Начало, середина и конец одного записанного эпизода. Сверху — вид основной камеры, снизу — тот же момент сбоку." loading="lazy"><figcaption>Начало, середина и конец одного записанного эпизода. Сверху — вид основной камеры, снизу — тот же момент сбоку.</figcaption></figure>
+    <h3>03 / Что модель увидит в моём видео</h3><p class="read">После симуляции попробовал дать модели собственную запись: рука держит кружку у стола. По RGB-кадрам подготовил оценки глубины и камеры, а также историю движения руки. UNITAS получила начало записи и предсказала следующую секунду. Продолжение я посмотрел уже после того, как сохранил прогноз.</p>
+    <ol class="unitas-pipeline"><li><span>01</span>RGB и история руки</li><li><span>02</span>Оценённая глубина</li><li><span>03</span>UNITAS SceneFlow</li><li><span>04</span>Отложенные кадры</li></ol>
+    <figure class="media"><img class="zoom light" src="media/unitas/prediction-vs-heldout.png" alt="Слева — кадры продолжения, которых модель не видела. Справа на них наложен прогноз: голубым — точки зелёной области кружки, розовым — точки захвата. В последней паре прогноз на +1,00 с сравнивается с кадром около +0,95 с." loading="lazy"><figcaption>Слева — кадры продолжения, которых модель не видела. Справа на них наложен прогноз: голубым — точки зелёной области кружки, розовым — точки захвата. В последней паре прогноз на +1,00 с сравнивается с кадром около +0,95 с.</figcaption></figure>
+    <div class="grid2 unitas-inputs"><figure class="media"><img class="zoom light" src="media/unitas/depth.png" alt="Оценка глубины по обычному видео. Датчика глубины здесь нет; для белых областей значения неизвестны." loading="lazy"><figcaption>Оценка глубины по обычному видео. Датчика глубины здесь нет; для белых областей значения неизвестны.</figcaption></figure><figure class="media"><img class="zoom light" src="media/unitas/hand-history.png" alt="Положение руки на трёх кадрах, поданных модели. Скрытые суставы пришлось достроить по предположениям." loading="lazy"><figcaption>Положение руки на трёх кадрах, поданных модели. Скрытые суставы пришлось достроить по предположениям.</figcaption></figure></div>
+    <div class="unitas-finding"><h4>Что получилось</h4><p>UNITAS приняла подготовленные данные и выдала прогноз. Точки кружки на выбранных кадрах визуально совпадают с её положением в продолжении. Но за эту секунду кружка почти не движется: рука не поднимает и не переносит её. Опыт показывает, что модель сохраняет почти неподвижную сцену; предсказание заметного движения ещё предстоит проверить.</p><p class="small muted">Точной глубины и настоящих 3D-траекторий для сравнения нет, поэтому я не считал 3D ADE/FDE и успешность манипуляции. По одному этому ролику также нельзя понять, где ошиблась модель, а где — подготовка данных.</p></div>
+</article>
 
   <!-- PET OR THREAT -->
   <article class="entry" id="pet">

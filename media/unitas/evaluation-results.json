@@ -1,0 +1,35 @@
+{
+  "task": "put the white mug on the plate",
+  "suite": "libero_90",
+  "task_id": 72,
+  "results": [
+    {
+      "checkpoint": "Fine-tuned",
+      "condition": "baseline",
+      "successes": 10,
+      "episodes": 10,
+      "median_policy_act_seconds": 1.4697158109997872
+    },
+    {
+      "checkpoint": "Fine-tuned",
+      "condition": "dim_light",
+      "successes": 10,
+      "episodes": 10,
+      "median_policy_act_seconds": 1.4891614069999832
+    },
+    {
+      "checkpoint": "Scratch",
+      "condition": "baseline",
+      "successes": 10,
+      "episodes": 10,
+      "median_policy_act_seconds": 1.4894260109999777
+    },
+    {
+      "checkpoint": "Scratch",
+      "condition": "dim_light",
+      "successes": 10,
+      "episodes": 10,
+      "median_policy_act_seconds": 1.4568478920000416
+    }
+  ]
+}

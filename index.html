@@ -37,7 +37,7 @@
       <a href="https://t.me/leonid_n_n">t.me/leonid_n_n</a>
       <a href="https://github.com/leonidnn">github.com/leonidnn</a>
     </p>
-    <div class="projlink" style="margin-top:22px"><a class="go" href="Nekrylov_CV_en.pdf" download>↓ Download CV as PDF</a></div>
+    <div class="projlink" style="margin-top:22px"><a class="go" href="Nekrylov_CV_en.pdf" download>↓ Download the previous CV as PDF</a></div>
   </div>
   <div class="photo"><img src="media/photo.jpg" alt="Leonid Nekrylov" onerror="this.parentNode.remove()"></div>
 </div>
@@ -61,7 +61,7 @@
   </div>
   <p>Phystech School of Applied Mathematics and Computer Science. Major: Applied Mathematics and Physics.</p>
 
-  <h4 style="margin-top:24px">Relevant courses</h4>
+  <h4 style="margin-top:24px">Selected courses</h4>
   <ul class="courses">
     <li><b>Optimization and ML.</b> Year-long course on optimization methods in ML (D. Merkulov), Machine Learning 1 (R. Neychev), LLMs (Giraffe AI).</li>
     <li><b>Reinforcement Learning.</b> Self-studied UC Berkeley CS285, Deep Reinforcement Learning (Sergey Levine).</li>
@@ -83,8 +83,8 @@
     </div>
     <div class="projlink"><a class="go" href="https://leonidnn.github.io/pet-or-threat-site/">▶ Watch the video</a><a class="url" href="https://leonidnn.github.io/pet-or-threat-site/">leonidnn.github.io/pet-or-threat-site</a></div>
     <ul class="bullets">
-      <li>Implemented autonomous behaviour selection for a simulated quadruped robot without external commands: guarding, play and social interaction, waiting for its owner, and rest.</li>
-      <li>The decision module receives perception data and generates high-level movement and gaze commands; pretrained RL policies handle locomotion. The module is simulator-independent; adapting it to another robot requires replacing the low-level controller.</li>
+      <li>Built a simulated robot that chooses its own behaviour without external commands: it guards, plays, socialises, waits for its owner and rests.</li>
+      <li>The decision module receives perception data and directs movement and gaze. Pretrained RL policies handle locomotion. The module is independent of the simulator: adapting it to another robot requires replacing the low-level controller.</li>
     </ul>
 
     <figure class="media" style="margin-top:28px">
@@ -92,7 +92,7 @@
     </figure>
 
     <h3>What the dog does</h3>
-    <p class="read">Four needs (energy, social, curiosity, territory), three emotions and what the dog sees and hears decide its mode ten times a second. Pick a mode to watch a clip.</p>
+    <p class="read">The dog chooses what to do based on its needs, emotions and what it sees and hears. It updates that decision ten times a second. Pick a mode to watch a clip.</p>
     <div class="tabs" id="modetabs" role="tablist" aria-label="Modes"></div>
     <div class="mode-view">
       <video id="modevideo" muted loop playsinline autoplay preload="metadata"></video>
@@ -100,14 +100,14 @@
     </div>
 
     <h3>Architecture</h3>
-    <p class="read">The system is split into three levels, like a living animal: senses, brain and muscles. Each level runs at its own rate and talks to its neighbour only through a short message. Below, in order, is what each level does and why it is built that way.</p>
+    <p class="read">The system has three levels: perception, decision-making and body control. They run at different rates and exchange short messages.</p>
 
     <div class="lvls">
       <div class="lvl">
         <div class="tag-l"><b>1. Perception</b>500 times a second</div>
         <div>
           <h4>What the dog sees, hears and feels</h4>
-          <p>MuJoCo computes the physics, and people in the room walk according to a pre-written script. The dog does not get a ready-made picture of the world. It sees only what falls into its 240° field of view, with noise, and does not see anything hidden behind a wall or another person. It hears bangs and footsteps within 4 m. It feels touch in five body zones and tells a stroke from a pat or a shove.</p>
+          <p>MuJoCo simulates the physics, while people in the room follow a predefined script. The dog does not get a complete picture of the world: it sees only what falls within its 240° field of view, with noise. Walls and people can block its view. It hears bangs and footsteps within 4 m, senses touch in five body zones and distinguishes a stroke from a pat or a shove.</p>
           <p class="why">Touch took some work. People’s hands in simulation are infinitely stiff, and the very first stroke pressed the dog into the floor with 5 kN. I had to make a hand that yields and settles at about 8 N, like a real palm.</p>
         </div>
       </div>
@@ -117,8 +117,8 @@
         <div class="tag-l"><b>2. Decisions</b>10 times a second</div>
         <div>
           <h4>What to do right now</h4>
-          <p>The dog has four needs: energy, social contact, curiosity and a sense of territory. They change over time and with events: play makes the dog tired, it misses its owner when alone, a new object makes it curious. On top of the needs there are three emotions: arousal, contentment and fear.</p>
-          <p>For each mode the brain computes a single number, how appropriate that mode is right now. The mode with the highest number wins. To keep the dog from flipping between two modes, the current mode gets a small head start and a minimum time it must stay in. Reflexes, meaning a startle, a shove or a fall, interrupt anything. Inside the chosen mode a step-by-step routine runs: for sleep, walk to the bed, turn round, lie down and curl up.</p>
+          <p>The dog has four needs: energy, social contact, curiosity and a sense of territory. They change over time and with events: play makes it tired, it misses its owner when alone, and a new object makes it curious. It also has three emotions: arousal, contentment and fear.</p>
+          <p>The brain scores how appropriate each mode is and chooses the highest-scoring one. To prevent the dog from switching constantly, the current mode gets a small advantage and a minimum duration. A startle, shove or fall can interrupt any mode. Each mode follows a sequence of steps: to sleep, the dog walks to its bed, turns around, lies down and curls up.</p>
           <p class="why">Why not a state machine or a neural network. A state machine with seven modes turns into a web of transitions, and it is hard to express “tired, but someone is at the door”. Reinforcement learning would need a reward for dog-likeness, and there is no such thing. Scoring appropriateness solves both problems and also explains every decision. Here is a real line from the log:</p>
           <code class="logline">hold the line: sentry 1.07 (threat 1.00, territorial 0.98) &gt; idle 0.12</code>
           <p class="why">An example of a subtlety. The robot walks half as fast as a person, so the dog starts guarding as soon as a stranger could reach the target within 8 seconds, rather than when the stranger comes within some distance. Otherwise it simply does not make it in time.</p>
@@ -129,17 +129,17 @@
       <div class="lvl">
         <div class="tag-l"><b>3. Body</b>50 times a second</div>
         <div>
-          <h4>How to carry it out</h4>
-          <p>Walking and getting up after a fall are driven by pretrained neural RL policies for the Go1 from the open project mjx-go1-getup. Sit, lie down, bow and shake off are predefined poses. Tail, neck and breathing run constantly in the background and show emotions: joy lifts the tail, fear tucks it in.</p>
+          <h4>How the dog moves</h4>
+          <p>Pretrained neural RL policies for the Go1 from the open project mjx-go1-getup control walking and getting up after a fall. Sitting, lying down, bowing and shaking use predefined poses. The tail, neck and breathing move continuously and convey emotion: joy lifts the tail, fear tucks it in.</p>
           <p class="why">I did not write my own gait, because the project is about behaviour, not walking. I tested the pretrained policies separately: no falls over 15 commands of 30 seconds each, and a successful get-up in 90% of 40 falls. Porting uncovered details that made the robot fall within the first second, for example an extra input normalization that was not used in training. I never blend poses and walking: the policy authors measured that blending raised the fall rate from 8% to 38–74%. A shove is also caught by the walk policy: it steps to recover, while a frozen pose simply falls over.</p>
         </div>
       </div>
     </div>
 
-    <p class="read" style="margin-top:20px"><b>The key point of this design.</b> The brain knows nothing about the simulator. It receives a perception snapshot and gives back an intent. The same decision module runs in a simplified test environment. Adapting it to another robot requires replacing the low-level controller and supplying perception data through the same interface.</p>
+    <p class="read" style="margin-top:20px"><b>Transferring to another platform.</b> The decision module receives perception data and issues high-level commands, so it is independent of the simulator. The same module runs in a simplified test environment. Adapting it to another robot requires replacing the low-level controller and supplying perception data through the same interface.</p>
 
     <h3>Metrics</h3>
-    <p class="read small muted">All scenarios are deterministic. Each runs twice, with emotions and with affect frozen at neutral. A separate test over 20 seeds, 72 minutes of simulation, 0 falls.</p>
+    <p class="read small muted">All scenarios are deterministic. Each runs twice: once with emotions and once with emotions fixed at neutral. In a separate test across 20 seeds, there were no falls over 72 minutes of simulation.</p>
     <div class="tablewrap">
       <table>
         <thead><tr><th>Scenario</th><th>What it tests</th><th>With emotions</th><th>Without emotions</th></tr></thead>
@@ -179,9 +179,9 @@
     </div>
     <div class="projlink"><a class="go" href="https://github.com/leonidnn/isaac-rgbd-grasping">▶ Watch the video and view the code</a><a class="url" href="https://github.com/leonidnn/isaac-rgbd-grasping">github.com/leonidnn/isaac-rgbd-grasping</a></div>
     <ul class="bullets">
-      <li>Built an Isaac Sim environment for grasp training with object randomization. Developed a custom Vulkan layer for explicit GPU selection without using other devices on a shared multi-user server.</li>
-      <li>Trained an RL agent: a network estimates grasp success for each point and angle from a depth map, and the agent selects the highest-scoring option.</li>
-      <li>Evaluation in new random poses with a full manipulator approach yielded 18/20 and 19/20 successful grasps on two objects. SAC did not learn the task within 5.7k attempts.</li>
+      <li>Built an Isaac Sim environment for grasp training with object randomization. Wrote a Vulkan layer that selects a GPU without occupying other devices on a shared server.</li>
+      <li>Trained an RL agent whose network estimates grasp success for each point and angle from a depth map. The agent selects the highest-scoring option.</li>
+      <li>Tested the agent on two objects in new random poses with a full manipulator approach: 18 successful grasps out of 20 and 19 out of 20. For comparison, SAC did not learn the task within 5.7k attempts.</li>
       <li>Evaluated skill transfer to a challenging deformable object (a bag) and compared fine-tuning strategies that preserve performance on previous objects. The best tested approach used two networks switched by object type: 88% on the new object versus 42% without fine-tuning, and 95% on previous objects.</li>
       <li>Identified a rendering artefact that distorted training and corrected the setup.</li>
     </ul>
@@ -194,14 +194,14 @@
         <figcaption>The trained agent chooses where and at what angle to grasp from a top-down image. The arm moves from its home pose, grasps the can and lifts it.</figcaption>
       </figure>
       <div>
-        <p><b>Task.</b> One of three objects lies on the table, a juice carton, a can or a bag of chips. A camera takes a top-down image, the agent decides where and at what angle to grasp, and the arm grasps from above and lifts. Success means lifting by 10 cm and holding for 1 s.</p>
-        <p>Every episode is randomized. The object, its position on the table, rotation from 0 to 360° and pose all change, the carton stands or lies, the chips face up or down.</p>
-        <p class="muted small">Everything happens in simulation. Full arm approach means the arm travels from its home pose using my planner instead of being teleported to the object, as in the fast training environment.</p>
+        <p><b>Task.</b> A carton, can or bag of chips lies on the table. A camera captures an image from above, and the agent chooses a point and angle for the grasp. The arm then grasps and lifts the object. An attempt succeeds if the object is lifted 10 cm and held for 1 s.</p>
+        <p>Each episode randomizes the object, its position, rotation from 0 to 360° and pose. The carton can stand or lie down; the bag of chips can face up or down.</p>
+        <p class="muted small">Everything happens in simulation. With a full approach, the arm moves from its home pose using my planner. In the fast training environment, it teleports to the object.</p>
       </div>
     </div>
 
     <h3>How the agent works</h3>
-    <p class="read">A Q-map following Zeng et al. 2018, Visual Pushing-Grasping, with a much simpler network. An episode is a single step, so training reduces to Q-learning with a horizon of one. After each attempt we know whether the grasp succeeded, and the network output at that cell is pulled towards 1 or 0.</p>
+    <p class="read">The agent uses a Q-map based on Zeng et al. 2018, Visual Pushing-Grasping, with a much simpler network. Each episode has one step, so training uses Q-learning with a horizon of one. After each attempt, the network adjusts its estimate for the selected cell towards 1 for success and 0 for failure.</p>
     <div class="flow" aria-label="Agent pipeline">
       <div class="node"><b>RGB-D camera</b><span>top-down image, depth only</span></div>
       <div class="arrow">→</div>
@@ -335,8 +335,8 @@
     <div class="projlink"><a class="go" href="https://huggingface.co/spaces/leonid-nn/hybrid-solver">▶ Try the solver</a><a class="url" href="https://huggingface.co/spaces/leonid-nn/hybrid-solver">huggingface.co/spaces/leonid-nn/hybrid-solver</a></div>
     <div class="projlink" style="margin-top:-8px"><a class="go" href="https://github.com/leonidnn/hybrid-solver">▶ See the code</a><a class="url" href="https://github.com/leonidnn/hybrid-solver">github.com/leonidnn/hybrid-solver</a></div>
     <ul class="bullets">
-      <li>Developed a mathematical problem solver that verifies answers and abstains from returning a result when verification fails.</li>
-      <li>Applied the principle of moving from a Monte Carlo algorithm to a Las Vegas algorithm (an analogy with the ZPP class): an answer is returned only when three independent methods agree — language-model reasoning, exact computation in SymPy, and numerical verification.</li>
+      <li>Developed a mathematical problem solver that checks its answers and withholds them when verification fails.</li>
+      <li>Used the transition from a Monte Carlo to a Las Vegas algorithm as an analogy (the ZPP class): the solver returns an answer only when its methods agree. It compares language-model reasoning, exact computation in SymPy and numerical verification. The runs are independent, but the sources are not statistically independent.</li>
     </ul>
 
     <div class="more-head">More</div>
@@ -346,7 +346,7 @@
     </div>
 
     <h3>The idea</h3>
-    <p class="read">A language model solving a problem behaves like a Monte Carlo probabilistic algorithm. It always gives an answer, but sometimes a wrong one, and a wrong answer looks just as confident as a right one. For a learning tool this is the worst case: a student cannot check the answer, and an error is presented as truth.</p>
+    <p class="read">A language model can confidently give a wrong answer. That is a problem for a learning tool: a student may not be able to check the solution independently. In this sense, the model resembles a Monte Carlo algorithm: it produces an answer, but that answer can be wrong.</p>
     <p class="read">Complexity theory has the class ZPP, problems solved by a Las Vegas algorithm. The analogy with Las Vegas algorithms motivates the project: verify the result and abstain when verification fails. This is neither a proof of ZPP membership nor a zero-error guarantee; agreement between methods is used to check the answer.</p>
 
     <h3>How it works</h3>
@@ -379,10 +379,10 @@
     <p class="read small muted" style="margin-top:10px">The solver never picks the “more likely” of disagreeing answers.</p>
 
     <h3>Drawings from the computation</h3>
-    <p class="read">In geometry problems the exact-solution code not only computes the answer but also outputs the figure in coordinates, and the server renders it as SVG. The drawing is the same configuration the code computed the answer on, so if the code misread the problem, it shows in the picture. For calculus problems it plots functions and shaded regions.</p>
+    <p class="read">For geometry problems, the exact-solution code computes the answer and specifies the figure in coordinates. The server renders those coordinates as an SVG drawing. Because the drawing shows the configuration used in the calculation, it can reveal when the code has misread the problem. For calculus problems, the solver plots functions and shaded regions.</p>
 
     <h3>Experiments and limitations</h3>
-    <p class="read">Answer-verification quality is evaluated on three problem sets with reference answers: school problems from Russian MATH-500, university problems from U-MATH and olympiad problems from OlympiadBench. The main metrics are the accuracy of given answers and coverage, how often the solver answers at all. For comparison, the same model is scored without the cross-check, like an ordinary chatbot.</p>
+    <p class="read">I evaluate answer verification on three problem sets with reference answers: school problems from Russian MATH-500, university problems from U-MATH and olympiad problems from OlympiadBench. I measure the accuracy of answers given and coverage, or how often the solver answers. For comparison, I evaluate the same model without cross-checking, as in an ordinary chatbot.</p>
     <p class="read muted small">There is no strict zero-error guarantee: one model produces all methods, and if it misreads the problem the same way, the methods can agree on a wrong answer. Next steps are different models for different methods and a rerun on disagreement.</p>
   </article>
 
@@ -393,7 +393,7 @@
       <div class="l2"><span>Founder, project lead</span><span>Moscow, Russia</span></div>
     </div>
     <ul class="bullets">
-      <li>Led a team of 5 spanning engineering and sales from the initial idea to a working prototype of a wearable climate-control system.</li>
+      <li>Led a team of 5 working on engineering and sales. We took a wearable climate-control system from an idea to a working prototype.</li>
       <li>Designed and built prototypes: CAD, sensors, microcontroller firmware, and bench testing.</li>
       <li>Secured a 1M rouble “Student Startup” grant for R&amp;D and testing.</li>
       <li>Handled sales and carried out 2 pilot deployments. Decided to close the project based on the results of hypothesis testing.</li>
@@ -445,8 +445,8 @@
     </div>
     <ul class="bullets">
       <li>Built PySpark data marts from raw clickstream.</li>
-      <li>Fine-tuned and validated candidate-retrieval models for a recommender system in PyTorch using offline metrics.</li>
-      <li>Traced the causes of recommender-system anomalies from bug reports and developed unit tests.</li>
+      <li>Fine-tuned candidate-retrieval models for a recommender system in PyTorch and evaluated them using offline metrics.</li>
+      <li>Used bug reports to trace anomalies in the recommender system and developed unit tests.</li>
     </ul>
   </article>
 </section>
